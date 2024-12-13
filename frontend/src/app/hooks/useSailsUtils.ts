@@ -2,8 +2,7 @@ import { useEffect, useContext } from "react";
 import { sailsContext } from "@/Context";
 import { HexString } from "@gear-js/api";
 import { SponsorData } from "../SailsCalls/types";
-
-import SailsCalls from "../SailsCalls";
+import SailsCalls from "../SailsCalls"
 
 export interface InitSailsI {
     contractId?: HexString,
@@ -11,6 +10,7 @@ export interface InitSailsI {
     network?: string,
     vouchersSigner?: SponsorData
 }
+
 
 /**
  * ## hook that initializes an instance of Sails
@@ -88,7 +88,6 @@ export const useInitSails = async (data?: InitSailsI) => {
             });
 
             if (setSails) setSails(sailsInstance);
-            
         };
 
         initSails();

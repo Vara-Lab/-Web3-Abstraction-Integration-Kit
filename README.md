@@ -82,17 +82,18 @@ cargo build --release
 
 ### Option 2: You can follow the steps above using gitpod!
 
-Note: si el compilador de rust tiene una versión anterior a la necesaria, tendras que actualizarla de la siguiente manera:
+Note: If your Rust compiler is older than the required version (1.83 or newer), you will need to update it as follows:
 
 ```sh
-rustup install 1.80.1
-rustup default 1.80.1
+rustup install 1.83
+rustup default 1.83
 ```
 
-In case that the compiler does not have the target 'wasm32-unknown-unknown', you need to install it with: 
+In case that the compiler does not have the target 'wasm32-unknown-unknown' or the component 'rust-src', you need to install both with: 
 
 ```sh
 rustup target add wasm32-unknown-unknown
+rustup component add rust-src --toolchain 1.83-x86_64-unknown-linux-gnu
 ```
 
 <p align="center">

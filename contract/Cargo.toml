@@ -11,8 +11,8 @@ edition = "2021"
 license = "GPL-3.0"
 
 [workspace.dependencies]
-gstd = "=1.6.2"
-sails-client-gen = "=0.6.1"
-sails-idl-gen = "=0.6.1"
-sails-rs = "=0.6.1"
+gstd = "=1.7.0"
+sails-client-gen = "=0.7.1"
+sails-idl-gen = "=0.7.1"
+sails-rs = "=0.7.1"
 keyring-service = { git = "https://github.com/Vara-Lab/Contracts-Services"}
