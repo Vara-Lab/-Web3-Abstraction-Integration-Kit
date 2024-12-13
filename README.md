@@ -96,6 +96,12 @@ rustup target add wasm32-unknown-unknown
 rustup component add rust-src --toolchain 1.83-x86_64-unknown-linux-gnu
 ```
 
+Finally, you need to install the wasm-opt (to optimize WebAssembly files):
+
+```bash
+sudo apt install binaryen
+```
+
 <p align="center">
   <a href="https://gitpod.io/#https://github.com/Vara-Lab/Web3-Abstraction-Integration-Kit.git" target="_blank">
     <img src="https://gitpod.io/button/open-in-gitpod.svg" width="240" alt="Gitpod">
