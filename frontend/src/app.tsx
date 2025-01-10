@@ -11,6 +11,7 @@ import {
   sponsorName,
   sponsorMnemonic
 } from "./app/consts";
+import { GoogleAuthButton } from "@/components";
 import "@gear-js/vara-ui/dist/style.css";
 
 function Component() {

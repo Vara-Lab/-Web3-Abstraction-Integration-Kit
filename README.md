@@ -7,6 +7,7 @@
 - [Functionality](#functionality)
 - [Prerequisites](#prerequisites)
 - [Instalation](#instalation)
+- [Google log in integration](#google-log-in-integration)
 - [Examples](#examples)
 
 ## Introduction
@@ -42,6 +43,128 @@ dApps have grown rapidly, however, many users are not familiar with web3 concept
 - **npm** or **yarn** for package management
 - **Vara Network RPC Endpoint**: A WebSocket endpoint to connect to the Vara network. Example: `wss://rpc.vara.network`.
 - **Sponsor data**: To sign vouchers for users, you need the mnemonic seed and a name from a wallet with tokens.
+- **Google client id**: To connecto to the google services to be able to log in with an google account ( its optional )
+
+## Google log in integration
+
+In order to use the Google login, you must first create a Google client ID (is a unique identifier associated with an application that assists with client and server OAuth 2.0 authentication.), to do this, you must follow the following steps:
+
+1. To get client ID from Google, you need to go to your [Google Cloud Console](https://console.cloud.google.com/):
+
+    <div>
+      <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/google-cloud-console.png" alt="">
+    </div>
+
+2. Next, you need to create a new project:
+
+    1. Click on the box next to the logo:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/google-cloud-console-select-project.png" alt="">
+        </div>
+
+    2. Click on the "New Project" button:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/new-project-button.png" alt="">
+        </div>
+
+    3. Set the name of your project (in my case it will be "VaraLogo") and the location (organization), you can leave this field as no organization if you don't have one, and then click "create":
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/set-fields-new-project.png" alt="">
+        </div>
+
+    4. Once created, press the button next to the logo again (as in step 2.1), and select the newly created project:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/select-project-created.png" alt="">
+        </div>
+
+    5. Finally, you should see in the upper left corner the name of your project along with a "notification" that you are viewing your project.
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/new-project-created-selected.png" alt="">
+        </div>
+    
+3. Creating a consent screen: a consent screen is a consent page that prompts the user to use an external or third-party library to log in. The Google login consent screen your app displays to the user may include a brief description of your project, its policies, and the requested scopes of access.
+
+    1. To configure the Google consent page, first, click the "APIs & Services" option:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/apis-and-services-option.png" alt="">
+        </div>
+
+    2. Next, press the `OAuth consent screen` option:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/oauth-consent-screen-option.png" alt="">
+        </div>
+
+    3. Once you are in this tab, choose external (which is the only option you can choose unless you are using a Google-verified organization or application), and click the Create button to create your consent screen:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/oauth-consent-screen-external-option.png" alt="">
+        </div>
+
+    4. Next, choose a name for your application (for example VaraTestDApp), an email address to get notifications about any changes to your project and a developer email address contact (You can keep the other requirements and options empty for now but if you have the details ready, you can add them during this step), and click in the `save and continue` button:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/oauth-consent-screen-config-data-1.png" alt="">
+        </div>
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/oauth-consent-screen-config-data-2.png" alt="">
+        </div>
+
+    5. In `Scopes` and `Test users`, click the `save and continue` button.
+
+    6. In `Summary`, press the `BACK TO DASHBOARD` button:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/oauth-consent-screen-config-finish.png" alt="">
+        </div>
+
+    7. After creating the OAuth consent screen, you need to publish the app before we can test it or before the authentication works. By default, its status is Testing and after publishing, it gets pushed to Production, this by pressing the `PUBLISH APP` button:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/publish-app-button.png" alt="">
+        </div>
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/publish-app-confirmation.png" alt="">
+        </div>
+
+4. Creating your web client ID
+
+    1. Click the Credentials tab to go to the page where you can create your web client ID and click on CREATE CREDENTIALS at the top of the page, and then select the OAuth client ID option:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/selecting-oauth-client-id-option.png" alt="">
+        </div>
+
+    2. Then, you need to select the application type (Web application), and choose for your client ID:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/oaut-client-id-config-1.png" alt="">
+        </div>
+
+    3. Next, you'll also add two types of URLs: Authorized JavaScript origins and Authorized redirect URLs. The Authorized JavaScript origins URL is the URL from which your application is originating the login, and the Authorized redirect URL is the link that Google will redirect the user to after the successful login. For the Authorized JavaScript origins and Authorized redirect URLs, add the localhost URLs: http://localhost:3000 and http://localhost (for testing), and press the `save` button, like so:
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/oauth-client-id-config-2.png" alt="">
+        </div>
+        
+    4. Congratulations! You can now copy your client ID to use Google login!, you need to copy the client id and paste it in the component to use it (in `frontend/src/app/hocs/index.tsx`, there you can also see the client id created in the example):
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/oauth-client-id-generated-1.png" alt="">
+        </div>
+
+        <div>
+          <img src="https://raw.githubusercontent.com/David-HernandezM/images-for-repos/refs/heads/main/google-client-id-login/oauth-client-id-generated-2.png" alt="">
+        </div>
+
 
 ## Instalation
 

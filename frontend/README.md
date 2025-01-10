@@ -144,3 +144,16 @@ console.log(response);
 ```
 
 You will find a large amount of examples of each method of SailsCalls in its documentation (its in the same frontend, yo only need to put your mouse over the method!) that will help you build your dApp!
+
+## Google integration
+
+The template accepts logins with google, it will create a new wallet for the user and it will bind this wallet to the user google account.
+
+To set this attribute, you need to add your client key in the `src/app/hocs/index.tsx` file, in the 15 line:
+
+```typescript
+function GoogleAuthProvider({ children }: ProviderProps) {
+  return <GoogleOAuthProvider clientId='YOUR CLIENT ID'>{children}</GoogleOAuthProvider>;
+}
+
+```

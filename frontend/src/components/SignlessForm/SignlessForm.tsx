@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useDappContext } from '@/Context/dappContext'
 import { useSailsCalls } from '@/app/hooks';
-import { useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form';
 import { Input, Button, Modal } from '@gear-js/vara-ui';
 import { useAlert } from '@gear-js/react-hooks';
 import { decodeAddress, HexString } from '@gear-js/api';
@@ -38,6 +38,7 @@ export const SignlessForm = ({ closeForm, onGetKeyring }: Props) => {
     const sails = useSailsCalls();
     const alert = useAlert();
     const { register, handleSubmit, formState } = useForm({ defaultValues: DEFAULT_VALUES });
+    const { handleSubmit: handleSubmitAccount } = useForm();
     const { errors } = formState;
     
     const {
@@ -245,122 +246,228 @@ export const SignlessForm = ({ closeForm, onGetKeyring }: Props) => {
     }
 
     const formWithoutWallet = () => {
-        return (
+        return !sectionConfirmCreationOfSignlessAccountIsOpen ? (
             <form 
-                onSubmit={
-                    handleSubmit(
-                        !sectionConfirmCreationOfSignlessAccountIsOpen
-                        ? handleSubmitNoWalletSignless
-                        : handleConfirmData
-                    )
-                } 
+                onSubmit={handleSubmit(handleSubmitNoWalletSignless)}
                 className='signless-form--form'
             >
-                {
-                    !sectionConfirmCreationOfSignlessAccountIsOpen && <>
-                        <Input 
-                            className='signless-form__input'
-                            type='account name'
-                            label='Set name'
-                            error={errors.password?.message}
+                <Input 
+                    className='signless-form__input'
+                    type='account name'
+                    label='Set name'
+                    error={errors.password?.message}
+                    {
+                        ...register(
+                            'accountName',
                             {
-                                ...register(
-                                    'accountName',
-                                    {
-                                        required: 'Field is required',
-                                        minLength: {
-                                            value: 10,
-                                            message: 'Minimum length is 10'
-                                        }
-                                    }
-                                )
+                                required: 'Field is required',
+                                minLength: {
+                                    value: 10,
+                                    message: 'Minimum length is 10'
+                                }
                             }
-                            onChange={(e) => {
-                                setNoWalletAccountData({
-                                    ...noWalletAccountData,
-                                    accountName: e.target.value
-                                });
-                            }}
-                            value={noWalletAccountData.accountName}
-                        />
-                        <Input 
-                            className='signless-form__input'
-                            type='password'
-                            label='Set password'
-                            error={errors.password?.message}
+                        )
+                    }
+                    onChange={(e) => {
+                        setNoWalletAccountData({
+                            ...noWalletAccountData,
+                            accountName: e.target.value
+                        });
+                    }}
+                    value={noWalletAccountData.accountName}
+                />
+                <Input 
+                    className='signless-form__input'
+                    type='password'
+                    label='Set password'
+                    error={errors.password?.message}
+                    {
+                        ...register(
+                            'password',
                             {
-                                ...register(
-                                    'password',
-                                    {
-                                        required: 'Field is required',
-                                        minLength: {
-                                            value: 10,
-                                            message: 'Minimum length is 10'
-                                        }
-                                    }
-                                )
+                                required: 'Field is required',
+                                minLength: {
+                                    value: 10,
+                                    message: 'Minimum length is 10'
+                                }
                             }
-                            onChange={(e) => {
-                                setNoWalletAccountData({
-                                    ...noWalletAccountData,
-                                    password: e.target.value
-                                });
-                            }}
-                            value={noWalletAccountData.password}
-                        />
-                    </>
-                }
-
-                {
-                    sectionConfirmCreationOfSignlessAccountIsOpen &&
-                    <p 
-                        style={{
-                            width: '280px',
-                            textAlign: 'center',
-                            marginBottom: '10px'
-                        }}
-                    >
-                        The account does not have a signless account, do you want to create one?
-                    </p>
-                }
-                
+                        )
+                    }
+                    onChange={(e) => {
+                        setNoWalletAccountData({
+                            ...noWalletAccountData,
+                            password: e.target.value
+                        });
+                    }}
+                    value={noWalletAccountData.password}
+                />
                 <Button 
                     className='signless-form__button'
                     type='submit'
                     block={true}
                     isLoading={loadingAnAction}
                 >
-                    {
-                        !sectionConfirmCreationOfSignlessAccountIsOpen
-                        ? 'Submit'
-                        : "Create"
-                    }
+                    Submit
                 </Button>
-
-                {
-                    sectionConfirmCreationOfSignlessAccountIsOpen &&  <Button
-                        className='signless-form__button'
-                        color='grey'
-                        block={true}
-                        onClick={() => setsectionConfirmCreationOfSignlessAccountIsOpen(false)}
-                        isLoading={loadingAnAction}
-                    >
-                        Cancel
-                    </Button>
-                }
-                {
-                    !sectionConfirmCreationOfSignlessAccountIsOpen &&  <Button
-                        className='signless-form__button'
-                        color='grey'
-                        block={true}
-                        onClick={closeForm}
-                        isLoading={loadingAnAction}
-                    >
-                        Cancel
-                    </Button>
-                }
+                <Button
+                    className='signless-form__button'
+                    color='grey'
+                    block={true}
+                    onClick={closeForm}
+                    isLoading={loadingAnAction}
+                >
+                    Cancel
+                </Button>
+            </form>
+        ) : (
+            <form 
+                onSubmit={handleSubmitAccount(handleConfirmData)}
+                className='signless-form--form'
+            >
+                <p 
+                    style={{
+                        width: '280px',
+                        textAlign: 'center',
+                        marginBottom: '10px'
+                    }}
+                >
+                    The account does not have a signless account, do you want to create one?
+                </p>
+                <Button 
+                    className='signless-form__button'
+                    type='submit'
+                    block={true}
+                    isLoading={loadingAnAction}
+                >
+                    Create
+                </Button>
+                <Button
+                    className='signless-form__button'
+                    color='grey'
+                    block={true}
+                    onClick={() => setsectionConfirmCreationOfSignlessAccountIsOpen(false)}
+                    isLoading={loadingAnAction}
+                >
+                    Cancel
+                </Button>
             </form>
         );
+        // return (
+        //     <form 
+        //         onSubmit={
+        //             handleSubmit(
+        //                 !sectionConfirmCreationOfSignlessAccountIsOpen
+        //                 ? handleSubmitNoWalletSignless
+        //                 : handleConfirmData
+        //             )
+        //         } 
+        //         className='signless-form--form'
+        //     >
+        //         {
+        //             !sectionConfirmCreationOfSignlessAccountIsOpen && <>
+        //                 <Input 
+        //                     className='signless-form__input'
+        //                     type='account name'
+        //                     label='Set name'
+        //                     error={errors.password?.message}
+        //                     {
+        //                         ...register(
+        //                             'accountName',
+        //                             {
+        //                                 required: 'Field is required',
+        //                                 minLength: {
+        //                                     value: 10,
+        //                                     message: 'Minimum length is 10'
+        //                                 }
+        //                             }
+        //                         )
+        //                     }
+        //                     onChange={(e) => {
+        //                         setNoWalletAccountData({
+        //                             ...noWalletAccountData,
+        //                             accountName: e.target.value
+        //                         });
+        //                     }}
+        //                     value={noWalletAccountData.accountName}
+        //                 />
+        //                 <Input 
+        //                     className='signless-form__input'
+        //                     type='password'
+        //                     label='Set password'
+        //                     error={errors.password?.message}
+        //                     {
+        //                         ...register(
+        //                             'password',
+        //                             {
+        //                                 required: 'Field is required',
+        //                                 minLength: {
+        //                                     value: 10,
+        //                                     message: 'Minimum length is 10'
+        //                                 }
+        //                             }
+        //                         )
+        //                     }
+        //                     onChange={(e) => {
+        //                         setNoWalletAccountData({
+        //                             ...noWalletAccountData,
+        //                             password: e.target.value
+        //                         });
+        //                     }}
+        //                     value={noWalletAccountData.password}
+        //                 />
+        //             </>
+        //         }
+
+        //         {
+        //             sectionConfirmCreationOfSignlessAccountIsOpen &&
+        //             <p 
+        //                 style={{
+        //                     width: '280px',
+        //                     textAlign: 'center',
+        //                     marginBottom: '10px'
+        //                 }}
+        //             >
+        //                 The account does not have a signless account, do you want to create one?
+        //             </p>
+        //         }
+                
+        //         <Button 
+        //             className='signless-form__button'
+        //             type='submit'
+        //             block={true}
+        //             isLoading={loadingAnAction}
+        //         >
+        //             {
+        //                 !sectionConfirmCreationOfSignlessAccountIsOpen
+        //                 ? 'Submit'
+        //                 : "Create"
+        //             }
+        //         </Button>
+
+        //         {
+        //             sectionConfirmCreationOfSignlessAccountIsOpen &&  <Button
+        //                 className='signless-form__button'
+        //                 color='grey'
+        //                 block={true}
+        //                 onClick={() => setsectionConfirmCreationOfSignlessAccountIsOpen(false)}
+        //                 isLoading={loadingAnAction}
+        //             >
+        //                 Cancel
+        //             </Button>
+        //         }
+        //         {
+        //             !sectionConfirmCreationOfSignlessAccountIsOpen &&  <Button
+        //                 className='signless-form__button'
+        //                 color='grey'
+        //                 block={true}
+        //                 onClick={closeForm}
+        //                 isLoading={loadingAnAction}
+        //             >
+        //                 Cancel
+        //             </Button>
+        //         }
+        //     </form>
+        // );
     }
 
     return <Modal

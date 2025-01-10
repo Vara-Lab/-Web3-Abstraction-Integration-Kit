@@ -3,10 +3,10 @@ import { useAlert } from "@gear-js/react-hooks";
 import { Button } from "@chakra-ui/react";
 import { useSailsCalls } from "@/app/hooks";
 import { useDappContext } from "@/Context";
-import { SignlessForm } from "@/components/SignlessForm/SignlessForm";
 import { addTokensToVoucher, renewVoucher, encryptString } from "@/app/utils";
 import { decodeAddress, HexString } from "@gear-js/api";
 import { KeyringPair } from '@polkadot/keyring/types';
+import { SignInFormOptionsModal } from "@/components/SignInFormOptionsModal/SignInFormOptionsModal";
 
 const GreenColor = () => {
   const sails = useSailsCalls();
@@ -67,8 +67,6 @@ const GreenColor = () => {
       return;
     }
 
-    console.log('Se mandara mensaje!!!');
-
     try {
       const response = await sails.command(
         'TrafficLight/Green',
@@ -118,14 +116,10 @@ const GreenColor = () => {
       >
         Green
       </Button>
-      {
+      { 
         modalOpen && 
-        <SignlessForm 
-          closeForm={
-            () => {
-              setModalOpen(false);
-            }
-          }
+        <SignInFormOptionsModal 
+          closeForm={() => setModalOpen(false)} 
           onGetKeyring={(userCodedName: string, keyring: KeyringPair, voucherId: HexString) => {
             sendMessage(userCodedName, keyring, voucherId);
           }}

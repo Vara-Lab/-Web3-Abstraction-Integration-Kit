@@ -3,10 +3,10 @@ import { useAlert } from "@gear-js/react-hooks";
 import { Button } from "@chakra-ui/react";
 import { useSailsCalls } from "@/app/hooks";
 import { useDappContext } from "@/Context";
-import { SignlessForm } from "@/components/SignlessForm/SignlessForm";
 import { addTokensToVoucher, renewVoucher, encryptString } from "@/app/utils";
 import { decodeAddress, HexString } from "@gear-js/api";
 import { KeyringPair } from '@polkadot/keyring/types';
+import { SignInFormOptionsModal } from "@/components/SignInFormOptionsModal/SignInFormOptionsModal";
 
 function YellowColor() {
   const sails = useSailsCalls();
@@ -118,7 +118,16 @@ function YellowColor() {
       >
         Yellow
       </Button>
-      {
+      { 
+        modalOpen && 
+        <SignInFormOptionsModal 
+          closeForm={() => setModalOpen(false)} 
+          onGetKeyring={(userCodedName: string, keyring: KeyringPair, voucherId: HexString) => {
+            sendMessage(userCodedName, keyring, voucherId);
+          }}
+        /> 
+      }
+      {/* {
         modalOpen && 
         <SignlessForm 
           closeForm={
@@ -130,7 +139,7 @@ function YellowColor() {
             sendMessage(userCodedName, keyring, voucherId);
           }}
         /> 
-      }
+      } */}
     </>
   );
 }

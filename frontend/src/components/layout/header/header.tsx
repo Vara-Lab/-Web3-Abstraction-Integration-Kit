@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Logo } from './logo';
 import { Button } from '@chakra-ui/react';
-import { SignlessForm } from '@/components/SignlessForm/SignlessForm';
 import { useDappContext } from '@/Context';
 import { UserAccountDataModal } from '@/components/UserAccountDataModal/UserAccountData';
 import { UserIcon } from 'lucide-react';
+import { SignInFormOptionsModal } from '@/components/SignInFormOptionsModal/SignInFormOptionsModal';
 import styles from './header.module.scss';
 
 type Props = {
@@ -38,7 +38,8 @@ export function Header({ isAccountVisible }: Props) {
           </Button>
         )
       }
-      { modalOpen && <SignlessForm closeForm={() => setModalOpen(false)}/> }
+
+      { modalOpen && <SignInFormOptionsModal closeForm={() => setModalOpen(false)} /> }
       { accountModalOpen && <UserAccountDataModal closeModal={() => setAccountModalOpen(false)} /> }
     </header>
   );
