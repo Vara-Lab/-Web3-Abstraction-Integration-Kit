@@ -22,7 +22,7 @@ export const sponsorName = "MEGAHACKATHON";
 export const sponsorMnemonic = "pipe material yellow hour brother velvet mimic cycle mango cram obtain minute";
 
 export const CONTRACT_DATA: ContractSails = {
-  programId: '0x285b178b5ec7720e8ae614e2dc032b86c0135e8a8579fe80c07ab655062e791b',
+  programId: '0x17cf40e9dfde5ede9fd4c7314a25a63cb989751f8e3e3dd0d29c01baf31c6da6',
   idl: `
     type KeyringData = struct {
       address: str,
@@ -54,6 +54,7 @@ export const CONTRACT_DATA: ContractSails = {
       Green,
       Yellow,
       Red,
+      KeyringError: KeyringError,
     };
 
     type IoTrafficLightState = struct {
@@ -74,9 +75,9 @@ export const CONTRACT_DATA: ContractSails = {
     };
 
     service TrafficLight {
-      Green : () -> TrafficLightEvent;
-      Red : () -> TrafficLightEvent;
-      Yellow : () -> TrafficLightEvent;
+      Green : (user_coded_name: str) -> TrafficLightEvent;
+      Red : (user_coded_name: str) -> TrafficLightEvent;
+      Yellow : (user_coded_name: str) -> TrafficLightEvent;
       query TrafficLight : () -> IoTrafficLightState;
     };
   `

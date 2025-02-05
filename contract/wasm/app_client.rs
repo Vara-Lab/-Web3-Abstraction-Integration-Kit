@@ -208,14 +208,23 @@ impl<R> TrafficLight<R> {
 }
 impl<R: Remoting + Clone> traits::TrafficLight for TrafficLight<R> {
     type Args = R::Args;
-    fn green(&mut self) -> impl Call<Output = TrafficLightEvent, Args = R::Args> {
-        RemotingAction::<_, traffic_light::io::Green>::new(self.remoting.clone(), ())
+    fn green(
+        &mut self,
+        user_coded_name: String,
+    ) -> impl Call<Output = TrafficLightEvent, Args = R::Args> {
+        RemotingAction::<_, traffic_light::io::Green>::new(self.remoting.clone(), user_coded_name)
     }
-    fn red(&mut self) -> impl Call<Output = TrafficLightEvent, Args = R::Args> {
-        RemotingAction::<_, traffic_light::io::Red>::new(self.remoting.clone(), ())
+    fn red(
+        &mut self,
+        user_coded_name: String,
+    ) -> impl Call<Output = TrafficLightEvent, Args = R::Args> {
+        RemotingAction::<_, traffic_light::io::Red>::new(self.remoting.clone(), user_coded_name)
     }
-    fn yellow(&mut self) -> impl Call<Output = TrafficLightEvent, Args = R::Args> {
-        RemotingAction::<_, traffic_light::io::Yellow>::new(self.remoting.clone(), ())
+    fn yellow(
+        &mut self,
+        user_coded_name: String,
+    ) -> impl Call<Output = TrafficLightEvent, Args = R::Args> {
+        RemotingAction::<_, traffic_light::io::Yellow>::new(self.remoting.clone(), user_coded_name)
     }
     fn traffic_light(&self) -> impl Query<Output = IoTrafficLightState, Args = R::Args> {
         RemotingAction::<_, traffic_light::io::TrafficLight>::new(self.remoting.clone(), ())
@@ -231,8 +240,8 @@ pub mod traffic_light {
         pub struct Green(());
         impl Green {
             #[allow(dead_code)]
-            pub fn encode_call() -> Vec<u8> {
-                <Green as ActionIo>::encode_call(&())
+            pub fn encode_call(user_coded_name: String) -> Vec<u8> {
+                <Green as ActionIo>::encode_call(&user_coded_name)
             }
         }
         impl ActionIo for Green {
@@ -240,28 +249,28 @@ pub mod traffic_light {
                 48, 84, 114, 97, 102, 102, 105, 99, 76, 105, 103, 104, 116, 20, 71, 114, 101, 101,
                 110,
             ];
-            type Params = ();
+            type Params = String;
             type Reply = super::TrafficLightEvent;
         }
         pub struct Red(());
         impl Red {
             #[allow(dead_code)]
-            pub fn encode_call() -> Vec<u8> {
-                <Red as ActionIo>::encode_call(&())
+            pub fn encode_call(user_coded_name: String) -> Vec<u8> {
+                <Red as ActionIo>::encode_call(&user_coded_name)
             }
         }
         impl ActionIo for Red {
             const ROUTE: &'static [u8] = &[
                 48, 84, 114, 97, 102, 102, 105, 99, 76, 105, 103, 104, 116, 12, 82, 101, 100,
             ];
-            type Params = ();
+            type Params = String;
             type Reply = super::TrafficLightEvent;
         }
         pub struct Yellow(());
         impl Yellow {
             #[allow(dead_code)]
-            pub fn encode_call() -> Vec<u8> {
-                <Yellow as ActionIo>::encode_call(&())
+            pub fn encode_call(user_coded_name: String) -> Vec<u8> {
+                <Yellow as ActionIo>::encode_call(&user_coded_name)
             }
         }
         impl ActionIo for Yellow {
@@ -269,7 +278,7 @@ pub mod traffic_light {
                 48, 84, 114, 97, 102, 102, 105, 99, 76, 105, 103, 104, 116, 24, 89, 101, 108, 108,
                 111, 119,
             ];
-            type Params = ();
+            type Params = String;
             type Reply = super::TrafficLightEvent;
         }
         pub struct TrafficLight(());
@@ -330,6 +339,7 @@ pub enum TrafficLightEvent {
     Green,
     Yellow,
     Red,
+    KeyringError(KeyringError),
 }
 #[derive(PartialEq, Clone, Debug, Encode, Decode, TypeInfo)]
 #[codec(crate = sails_rs::scale_codec)]
@@ -379,9 +389,18 @@ pub mod traits {
     #[allow(clippy::type_complexity)]
     pub trait TrafficLight {
         type Args;
-        fn green(&mut self) -> impl Call<Output = TrafficLightEvent, Args = Self::Args>;
-        fn red(&mut self) -> impl Call<Output = TrafficLightEvent, Args = Self::Args>;
-        fn yellow(&mut self) -> impl Call<Output = TrafficLightEvent, Args = Self::Args>;
+        fn green(
+            &mut self,
+            user_coded_name: String,
+        ) -> impl Call<Output = TrafficLightEvent, Args = Self::Args>;
+        fn red(
+            &mut self,
+            user_coded_name: String,
+        ) -> impl Call<Output = TrafficLightEvent, Args = Self::Args>;
+        fn yellow(
+            &mut self,
+            user_coded_name: String,
+        ) -> impl Call<Output = TrafficLightEvent, Args = Self::Args>;
         fn traffic_light(&self) -> impl Query<Output = IoTrafficLightState, Args = Self::Args>;
     }
 }

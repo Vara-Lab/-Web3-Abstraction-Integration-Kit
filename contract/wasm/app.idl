@@ -28,6 +28,7 @@ type TrafficLightEvent = enum {
   Green,
   Yellow,
   Red,
+  KeyringError: KeyringError,
 };
 
 type IoTrafficLightState = struct {
@@ -48,9 +49,9 @@ service Keyring {
 };
 
 service TrafficLight {
-  Green : () -> TrafficLightEvent;
-  Red : () -> TrafficLightEvent;
-  Yellow : () -> TrafficLightEvent;
+  Green : (user_coded_name: str) -> TrafficLightEvent;
+  Red : (user_coded_name: str) -> TrafficLightEvent;
+  Yellow : (user_coded_name: str) -> TrafficLightEvent;
   query TrafficLight : () -> IoTrafficLightState;
 };
 

@@ -10,6 +10,11 @@ use crate::states::traffic_light_state::{
     IoTrafficLightState
 };
 
+// import the keyring accounts state
+use keyring_service::{
+    state::KeyringAccounts,
+    service_enums::KeyringError
+};
 
 // Traffic light service struct to build the service 
 #[derive(Default)]
@@ -37,9 +42,23 @@ impl TrafficLightService {
     // Remote call "green" exposed to external consumers
     // Returns a struct that will be sent as a response to the user
     // Is treated as a command changing the state (&mut self)
-    pub fn green(&mut self) -> TrafficLightEvent {
-        // // Get state as mut
-        // let traffic_light_state = traffic_light_state_mut();
+    pub fn green(
+        &mut self,
+        user_coded_name: String
+    ) -> TrafficLightEvent {
+        // first check if the user is registered
+        let caller = msg::source();
+        // Check if the user coded name are linked to the keyring address account
+        let result = KeyringAccounts::state_ref()
+            .check_keyring_address_by_user_coded_name(
+                caller, 
+                user_coded_name
+            );
+
+        // If the user coded name are not linked, return an error
+        if let Err(error) = result {
+            return TrafficLightEvent::KeyringError(error);
+        }
 
         let current_light = "Green".to_string();
 
@@ -58,9 +77,23 @@ impl TrafficLightService {
     // Remote call "yellow" exposed to external consumers
     // Returns a struct that will be sent as a response to the user
     // Is treated as a command changing the state (&mut self)
-    pub fn yellow(&mut self) -> TrafficLightEvent {
-        // // Get state as mut
-        // let traffic_light_state = traffic_light_state_mut();
+    pub fn yellow(
+        &mut self,
+        user_coded_name: String
+    ) -> TrafficLightEvent {
+        // first check if the user is registered
+        let caller = msg::source();
+        // Check if the user coded name are linked to the keyring address account
+        let result = KeyringAccounts::state_ref()
+            .check_keyring_address_by_user_coded_name(
+                caller, 
+                user_coded_name
+            );
+
+        // If the user coded name are not linked, return an error
+        if let Err(error) = result {
+            return TrafficLightEvent::KeyringError(error);
+        }
 
         let current_light = "Yellow".to_string();
 
@@ -78,9 +111,23 @@ impl TrafficLightService {
     // Remote call "yellow" exposed to external consumers
     // Returns a struct that will be sent as a response to the user
     // Is treated as a command changing the state (&mut self)
-    pub fn red(&mut self) -> TrafficLightEvent {
-        // // Get state as mut
-        // let traffic_light_state = traffic_light_state_mut();
+    pub fn red(
+        &mut self,
+        user_coded_name: String
+    ) -> TrafficLightEvent {
+        // first check if the user is registered
+        let caller = msg::source();
+        // Check if the user coded name are linked to the keyring address account
+        let result = KeyringAccounts::state_ref()
+            .check_keyring_address_by_user_coded_name(
+                caller, 
+                user_coded_name
+            );
+
+        // If the user coded name are not linked, return an error
+        if let Err(error) = result {
+            return TrafficLightEvent::KeyringError(error);
+        }
 
         let current_light = "Red".to_string();
 
@@ -113,7 +160,8 @@ impl TrafficLightService {
 pub enum TrafficLightEvent {
     Green,
     Yellow,
-    Red
+    Red,
+    KeyringError(KeyringError)
 }
 
 
